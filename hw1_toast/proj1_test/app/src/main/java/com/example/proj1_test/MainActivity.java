@@ -1,8 +1,10 @@
 package com.example.proj1_test;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private String[] songParts;
     private int currentId = 0;
     private Toast currentToast;
+    private int clickCount = 0;
+
     MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,18 @@ public class MainActivity extends AppCompatActivity {
             songParts = new String[]{"Error loading lyrics"};
         }
     }
+    @SuppressLint("SetTextI18n")
     public void f(View view) {
+        Button b = (Button) view;
+        clickCount++;
+        b.setText("Show lyrics (" + clickCount + ")");
+        int buttonColor = Color.rgb(
+                (int) (Math.random() * 256),
+                (int) (Math.random() * 256),
+                (int) (Math.random() * 256)
+        );
+        b.setBackgroundColor(buttonColor);
+
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
         }
