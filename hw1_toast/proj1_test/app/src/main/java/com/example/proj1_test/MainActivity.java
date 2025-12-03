@@ -5,80 +5,50 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity {
-    private String[] songParts;
-    private int currentId = 0;
-    private Toast currentToast;
-    private int clickCount = 0;
 
-    MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.bleed_me_an_ocean);
-        mediaPlayer.setLooping(true);
+        ImageView flagImage = findViewById(R.id.flagImage);
 
-        try {
-            InputStream is = getResources().openRawResource(R.raw.bleed_me_an_ocean_lyrics);
-            byte[] bytes = new byte[is.available()];
-            is.read(bytes);
-            is.close();
+        TextView helloText = findViewById(R.id.helloText);
 
-            String[] allLines = new String(bytes).split("\\r?\\n");
+        String language = Locale.getDefault().getLanguage();
 
-            ArrayList<String> filtered = new ArrayList<>();
-            for (String line : allLines) {
-                line = line.trim();
-                if (!line.isEmpty() && !line.startsWith("[")) {
-                    filtered.add(line);
-                }
-            }
-            songParts = filtered.toArray(new String[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-            songParts = new String[]{"Error loading lyrics"};
+        String flagUrl;
+        switch (language) {
+            case "uk":
+                flagUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Ukraine.svg/512px-Flag_of_Ukraine.svg.png";
+                break;
+            case "en":
+                flagUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/512px-Flag_of_the_United_States.svg.png";
+                break;
+            case "fr":
+                flagUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/512px-Flag_of_France.svg.png";
+                break;
+            default:
+                flagUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Europe.svg/512px-Flag_of_Europe.svg.png";
         }
-    }
-    @SuppressLint("SetTextI18n")
-    public void f(View view) {
-        Button b = (Button) view;
-        clickCount++;
-        b.setText("Show lyrics (" + clickCount + ")");
-        int buttonColor = Color.rgb(
-                (int) (Math.random() * 256),
-                (int) (Math.random() * 256),
-                (int) (Math.random() * 256)
-        );
-        b.setBackgroundColor(buttonColor);
 
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
-        if (currentToast != null) currentToast.cancel();
+        helloText.setText("Language: " + language + "\nFlag URL: " + flagUrl);
 
-        int bgColor = Color.rgb((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
-
-        currentToast = Toasty.custom(
-                this,
-                songParts[currentId],
-                null,
-                bgColor,
-                Color.WHITE,
-                Toast.LENGTH_SHORT,
-                false,
-                true
-        );
-        currentToast.show();
-        currentId = (currentId + 1) % songParts.length;
+        Glide.with(this).load(flagUrl).into(flagImage);
     }
 }
