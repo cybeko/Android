@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">proj4_recyclerview</string>
+    <string name="_0">$0</string>
+    <string name="item_name">Item name</string>
+    <string name="itemlist">ItemList</string>
+    <string name="select_all">Select All</string>
+</resources>
